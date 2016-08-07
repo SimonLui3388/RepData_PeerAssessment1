@@ -1,14 +1,20 @@
 ---
 title: "RepData_PeerAssignment1"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=TRUE}
 library(knitr)
+opts_chunk$set(fig.path = "figures/")
 knitr::opts_chunk$set(echo = TRUE)
+
+
 library(ggplot2)
 library(plyr)
 library(data.table)
+
 ```
 
 ## Assignment
@@ -67,15 +73,17 @@ For this part of the assignment, you can ignore the missing values in the datase
 
 1.Make a histogram of the total number of steps taken each day
 
-```{r Make a histogram of the total number of steps taken each day}
+```{r plot1}
 hist(total$steps,col="green",breaks=40, main="Histogram of Steps Taken per Day", xlab="number of Steps per Day", ylab="Number of times in a day(Count)")
+
 ```
 
 
 2.Calculate and report the mean and median total number of steps taken per day
 
-```{r report the mean and median total number of steps taken per day}
+```{r report the mean and median total number of steps taken per day, fig.height=10,fig.width=10}
 steps_mean<-mean(total$steps)
+
 print(steps_mean)
 steps_median<-median(total$steps)
 print(steps_median)
@@ -86,7 +94,7 @@ print(steps_median)
 1.Make a time series plot (i.e.  type = "l" ) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
 
-```{r  plot of the 5-minute interval and the average number of steps taken, averaged across all days}
+```{r  plot2}
 interval<-aggregate(steps~interval,without_na,mean)
 names(interval)[2]<-"mean_steps"
 interval$interval<-as.integer(levels(interval$interval)[interval$interval])
@@ -119,11 +127,12 @@ print(missing_values)
 
 A histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day.
 
-````{r step per day nm}
+````{r plot3}
 steps_per_day_nm<-as.data.frame(tapply(without_na$steps,INDEX=without_na$date,FUN="sum"))
 colnames(steps_per_day_nm)<-"steps"
 max_num_steps<-max(steps_per_day_nm)+5000
 hist(steps_per_day_nm$steps,main="Total Number of Steps Per Day", xlab="Total Number of Steps Per Day", ylab = "Number of time in a day", breaks = 10,xlim = c(0,max_num_steps),ylim=c(0,20), col = "blue")
+
 ````
 
 
@@ -131,7 +140,7 @@ hist(steps_per_day_nm$steps,main="Total Number of Steps Per Day", xlab="Total Nu
 
 4.Make  Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-````{r imputing missing data total daily number of steps}
+````{r imputing missing data total daily number of steps }
 steps_mean_fill<-mean(steps_per_day_nm$steps, na.rm=TRUE)
 print(steps_mean_fill)
 
@@ -184,8 +193,8 @@ table(by_weekdays$dayofweek)
 
 2.Make a panel plot containing a time series plot (i.e.  type = "l" ) of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was created using simulated data:
 
-````{r average across all weekday days or weekend days}
-plot2<-ggplot(by_weekdays,aes(x=interval,y=steps))+geom_line(color="orange")+facet_wrap(~ dayofweek,nrow=2,ncol = 1) +labs(x="Interval",y="Number of steps")+theme_bw()
-print(plot2)
+````{r plot4}
+plot4<-ggplot(by_weekdays,aes(x=interval,y=steps))+geom_line(color="orange")+facet_wrap(~ dayofweek,nrow=2,ncol = 1) +labs(x="Interval",y="Number of steps")+theme_bw()
+print(plot4)
 
 ````
